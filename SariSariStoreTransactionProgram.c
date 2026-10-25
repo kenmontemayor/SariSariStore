@@ -33,3 +33,4 @@ typedef struct Transaction {
     double change;
     struct Transaction*next;
 } Transaction;
+
