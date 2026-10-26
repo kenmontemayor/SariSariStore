@@ -34,3 +34,25 @@ typedef struct Transaction {
     struct Transaction*next;
 } Transaction;
 
+static Product products[MAX_PRODUCTS] = {
+    {1, "3 in 1 Nescafe", 13.00, 20},
+    {2, "Bear Brand (Sachet)", 15.00, 20},
+    {3, "Coke Litro", 48.00, 20},
+    {4, "Piatos", 20.00, 20},
+    {5, "Moby", 10.00, 20},
+    {6, "Milo", 11.00, 20},
+    {7, "Pancit Canton Chilimansi", 16.00, 20},
+    {8, "Pancit Canton Hot & Spicy", 16.00, 20},
+    {9, "Lucky Me Beef", 16.00, 20},
+    {10, "San Marino (Small)", 35.00, 20},
+    {11, "San Marino (Big)", 45.00, 20},
+    {12, "Mega Sardines", 27.00, 20},
+    {13, "Ligo Sardines", 29.00, 20},
+    {14, "Zest-0", 12.00, 20},
+    {15, "Cobra (Yellow)", 18.00, 20},
+    {16, "San Mig Lychee (Can)", 65.00, 20},
+    {17, "Red Bull (Small Can)", 90.00, 20},
+    {18, "Red Bull Zero Sugar (Small Can)", 90.00, 20},
+    {19, "Gin Bilog", 50.00, 20},
+    {20, "Tang Grape", 22.00, 20}
+};
