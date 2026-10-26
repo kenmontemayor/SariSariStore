@@ -34,6 +34,7 @@ typedef struct Transaction {
     struct Transaction*next;
 } Transaction;
 
+
 static Product products[MAX_PRODUCTS] = {
     {1, "3 in 1 Nescafe", 13.00, 20},
     {2, "Bear Brand (Sachet)", 15.00, 20},
