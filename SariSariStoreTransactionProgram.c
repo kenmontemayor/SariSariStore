@@ -57,3 +57,44 @@ static Product products[MAX_PRODUCTS] = {
     {19, "Gin Bilog", 50.00, 20},
     {20, "Tang Grape", 22.00, 20}
 };
+
+void printProductTable(void);
+void displayProducts(void);
+Product *findProduct(int id);
+
+
+
+void printProductTable(void) {
+    int i;
+
+    printf("\n===============================================================\n");
+    printf("%-5s %-35s %-12s %-10s\n",
+           "ID", "PRODUCT NAME", "PRICE (PHP)", "STOCK");
+    printf("---------------------------------------------------------------\n");
+
+    for (i = 0; i < MAX_PRODUCTS; i++) {
+        printf("%-5d %-35s PHP %-8.2f %-10d\n",
+               products[i].id,
+               products[i].name,
+               products[i].price,
+               products[i].stock);
+    }
+
+    printf("===============================================================\n");
+}
+
+void displayProducts(void) {
+    printProductTable();
+}
+
+Product *findProduct(int id) {
+    int i;
+
+    for (i = 0; i < MAX_PRODUCTS; i++) {
+        if (products[i].id == id) {
+            return &products[i];
+        }
+    }
+
+    return NULL;
+}
