@@ -99,6 +99,115 @@ Product *findProduct(int id) {
     return NULL;
 }
 
+/*processTransaction(), restoreStock(), addTransaction()*/
+void processTransaction(void) {
+    int productID, quantity;
+    Product *product;
+    double total;
+
+    printProductTable();
+
+    productID = readInt("\nEnter product ID: ");
+    product = findProduct(productID);
+
+    if (product == NULL) {
+        printf("Product not found.\n");
+        return;
+    }
+
+    printf("Selected product: %s\n", product->name);
+    printf("Price: PHP %.2f\n", product->price);
+    printf("Available stock: %d\n", product->stock);
+
+    quantity = readInt("Enter quantity: ");
+
+    if (quantity <= 0) {
+        printf("Quantity must be greater than zero.\n");
+        return;
+    }
+
+    if (quantity > product->stock) {
+        printf("Insufficient stock. Sale cancelled.\n");
+        return;
+    }
+
+    total = product->price * quantity;
+
+    printf("\nTotal amount: PHP %.2f\n", total);
+
+    {
+        char confirm[10];
+
+        printf("Confirm sale? (y/n): ");
+        readLine(confirm, sizeof(confirm));
+
+        if (tolower((unsigned char)confirm[0]) != 'y') {
+            printf("Sale cancelled.\n");
+            return;
+        }
+    }
+
+    /* Record the transaction before changing stock. */
+    if (addTransaction(product->name, quantity, total)) {
+        product->stock -= quantity;
+
+        printf("\nSale recorded successfully!\n");
+        printf("Transaction ID: %d\n", nextTransactionID - 1);
+        printf("Product: %s\n", product->name);
+        printf("Quantity: %d\n", quantity);
+        printf("Total: PHP %.2f\n", total);
+        printf("Remaining stock: %d\n", product->stock);
+    } else {
+        printf("Unable to record sale. Stock was not changed.\n");
+    }
+}
+
+void restoreStock(const char *productName, int quantity) {
+    int i;
+
+    for (i = 0; i < MAX_PRODUCTS; i++) {
+        if (strcmp(products[i].name, productName) == 0) {
+            products[i].stock += quantity;
+            return;
+        }
+    }
+}
+
+int addTransaction(const char *productName,
+                   int quantity, double total) {
+    Transaction *newTransaction;
+    Transaction *current;
+
+    newTransaction = malloc(sizeof(Transaction));
+
+    if (newTransaction == NULL) {
+        return 0;
+    }
+
+    newTransaction->id = nextTransactionID++;
+    snprintf(newTransaction->productName,
+             sizeof(newTransaction->productName),
+             "%s", productName);
+    newTransaction->quantity = quantity;
+    newTransaction->total = total;
+    newTransaction->next = NULL;
+
+    if (transactionHead == NULL) {
+        transactionHead = newTransaction;
+    } else {
+        current = transactionHead;
+
+        while (current->next != NULL) {
+            current = current->next;
+        }
+
+        current->next = newTransaction;
+    }
+
+    return 1;
+}
+
+
 /*findTransaction(), searchTransaction()*/
 extern Transaction *head;
 int readInt(const char *prompt);
