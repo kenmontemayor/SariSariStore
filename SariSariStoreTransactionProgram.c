@@ -61,6 +61,9 @@ static Product products[MAX_PRODUCTS] = {
 void printProductTable(void);
 void displayProducts(void);
 Product *findProduct(int id);
+void displaySummary(void);
+void deleteTransaction(void);
+void freeTransactions(void);
 
 
 
@@ -249,3 +252,125 @@ void searchTransaction(void) {
         printTransaction(t);
     }
 }
+
+// Displays the summary of all recorded transactions
+void displaySummary(void) {
+
+    // Start at the first transaction in the linked list
+    Transaction *current = head;
+
+    // Initialize variables for the summary
+    int transactionCount = 0;
+    double totalSales = 0.0;
+    double averageSale = 0.0;
+
+    // Check if there are no transactions recorded
+    if (head == NULL) {
+        printf("\n====================================\n");
+        printf("       TRANSACTION SUMMARY\n");
+        printf("====================================\n");
+        printf("No transactions recorded yet.\n");
+        return;
+    }
+
+    // Traverse the linked list to count transactions
+    // and calculate the total sales
+    while (current != NULL) {
+
+        // Count each transaction
+        transactionCount++;
+
+        // Add the transaction amount to total sales
+        totalSales += current->total;
+
+        // Move to the next transaction
+        current = current->next;
+    }
+
+    // Calculate the average sale amount
+    if (transactionCount > 0) {
+        averageSale = totalSales / transactionCount;
+    }
+
+    // Display the transaction summary
+    printf("\n====================================\n");
+    printf("       TRANSACTION SUMMARY\n");
+    printf("====================================\n");
+
+    printf("Total Transactions : %d\n", transactionCount);
+    printf("Total Sales       : PHP %.2f\n", totalSales);
+    printf("Average Sale      : PHP %.2f\n", averageSale);
+
+    printf("====================================\n");
+}
+
+// Deletes a transaction using its transaction ID
+void deleteTransaction(void) {
+
+    // Pointers used to traverse the linked list
+    Transaction *current = head;
+    Transaction *previous = NULL;
+
+    // Variable for the transaction ID entered by the user
+    int id;
+    int i;
+
+    // Check if there are no transactions to delete
+    if (head == NULL) {
+        printf("\nNo transactions available to delete.\n");
+        return;
+    }
+
+    // Ask the user for the transaction ID
+    id = readInt("\nEnter transaction ID to delete: ");
+
+    // Search for the transaction in the linked list
+    while (current != NULL) {
+
+        // Check if the current transaction matches the ID
+        if (current->id == id) {
+
+            // Restore the stock of the products
+            // included in the deleted transaction
+            for (i = 0; i < current->itemCount; i++) {
+
+                // Add the purchased quantity back to stock
+                restoreStock(
+                    current->items[i].name,
+                    current->items[i].qty
+                );
+            }
+
+            // If the transaction is the first node,
+            // update the head pointer
+            if (previous == NULL) {
+                head = current->next;
+            }
+
+            // Otherwise, connect the previous node
+            // to the next node, skipping the deleted one
+            else {
+                previous->next = current->next;
+            }
+
+            // Release the memory used by the transaction
+            free(current);
+
+            // Inform the user that deletion was successful
+            printf("\nTransaction #%d deleted successfully!\n", id);
+            printf("Product stock has been restored.\n");
+
+            return;
+        }
+
+        // Move the previous pointer to the current node
+        previous = current;
+
+        // Move to the next transaction
+        current = current->next;
+    }
+
+    // Display a message if the transaction ID was not found
+    printf("\nTransaction #%d not found.\n", id);
+}
+
