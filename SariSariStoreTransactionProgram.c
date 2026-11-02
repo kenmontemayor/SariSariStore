@@ -273,6 +273,8 @@ void displaySummary(void) {
         return;
     }
 
+    
+
     // Traverse the linked list to count transactions
     // and calculate the total sales
     while (current != NULL) {
@@ -303,6 +305,8 @@ void displaySummary(void) {
 
     printf("====================================\n");
 }
+
+
 
 // Deletes a transaction using its transaction ID
 void deleteTransaction(void) {
@@ -372,5 +376,35 @@ void deleteTransaction(void) {
 
     // Display a message if the transaction ID was not found
     printf("\nTransaction #%d not found.\n", id);
+}
+
+// Prints a single transaction as one formatted row in the transaction table.
+void printTransaction(Transaction *transaction) {
+if (transaction == NULL) {
+return;
+}
+printf("%-8d %-22s %-10d PHP %.2f\n",
+transaction->id,
+transaction->productName,
+transaction->quantity,
+transaction->total);
+}
+
+
+// Displays the full transaction history in a formatted table.
+void viewHistory(void) {
+Transaction *current = transactionHead;
+printf("\n================ TRANSACTION HISTORY ================\n");
+printf("%-8s %-22s %-10s %s\n",
+"ID", "PRODUCT", "QUANTITY", "TOTAL");
+printf("-----------------------------------------------------\n");
+if (current == NULL) {
+printf("No transactions recorded yet.\n");
+return;
+}
+while (current != NULL) {
+printTransaction(current);
+current = current->next;
+}
 }
 
