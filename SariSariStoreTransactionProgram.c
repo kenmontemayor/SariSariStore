@@ -98,3 +98,45 @@ Product *findProduct(int id) {
 
     return NULL;
 }
+
+/*findTransaction(), searchTransaction()*/
+extern Transaction *head;
+int readInt(const char *prompt);
+void printTransaction(prompt Transaction *t);
+
+Transaction *findTransaction(int id);
+void searchTransaction(void);
+
+/* Walk the linked list and return the transaction with the given ID or NULL if there is no match.*/
+Transaction *findTransaction(int id) {
+    Transaction *cur = head;
+ 
+    while (cur != NULL) {
+        if (cur->id == id) {
+            return cur;
+        }
+        cur = cur->next;
+    }
+ 
+    return NULL;
+}
+ 
+/* Asks for a transaction ID, looks it up, and prints it if found. */
+void searchTransaction(void) {
+    int id;
+    Transaction *t;
+ 
+    if (head == NULL) {
+        printf("\nNo transactions recorded yet.\n");
+        return;
+    }
+ 
+    id = readInt("Enter transaction ID to search: ");
+    t = findTransaction(id);
+ 
+    if (t == NULL) {
+        printf("\nTransaction #%d not found.\n", id);
+    } else {
+        printTransaction(t);
+    }
+}
